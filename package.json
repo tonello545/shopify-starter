@@ -4,10 +4,11 @@
   "description": "Build system for Shopify Dawn-based theme",
   "main": "build.js",
   "scripts": {
-    "build": "node build.js build",
     "dev": "node build.js watch",
+    "dev:push": "node build.js watch:push",
+    "build": "node build.js build",
     "clean": "node build.js clean",
-    "start": "npm run build && shopify theme serve"
+    "push": "shopify theme push -d"
   },
   "keywords": ["shopify", "theme", "dawn", "build"],
   "author": "",

@@ -6,12 +6,15 @@ const chokidar = require('chokidar');
 
 class ShopifyThemeBuilder {
   constructor() {
+    // Directory sorgenti (dove sviluppi)
     this.srcDir = path.join(__dirname, 'src');
-    this.sectionsDir = path.join(__dirname, 'sections');
-    this.snippetsDir = path.join(__dirname, 'snippets');
-    this.destSectionsDir = path.join(this.srcDir, 'sections');
-    this.destSnippetsDir = path.join(this.srcDir, 'snippets');
-    this.destAssetsDir = path.join(this.srcDir, 'assets');
+    this.srcSectionsDir = path.join(this.srcDir, 'sections');
+    this.srcSnippetsDir = path.join(this.srcDir, 'snippets');
+    
+    // Directory di destinazione (root del tema Shopify)
+    this.destSectionsDir = path.join(__dirname, 'sections');
+    this.destSnippetsDir = path.join(__dirname, 'snippets');
+    this.destAssetsDir = path.join(__dirname, 'assets');
   }
 
   // Crea le directory di destinazione se non esistono
@@ -212,6 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 `;
   }
+
   async processSection(sectionPath) {
     const sectionName = path.basename(sectionPath);
     console.log(`🔨 Processing section: ${sectionName}`);
@@ -434,19 +438,21 @@ window.${className} = ${className};
     await this.ensureDirectories();
     
     // Build sections
-    const sectionDirs = await glob('*/', { cwd: this.sectionsDir });
-    console.log('📄 Building sections...');
-    for (const dir of sectionDirs) {
-      const fullPath = path.join(this.sectionsDir, dir);
-      await this.processSection(fullPath);
+    if (await fs.pathExists(this.srcSectionsDir)) {
+      const sectionDirs = await glob('*/', { cwd: this.srcSectionsDir });
+      console.log('📄 Building sections...');
+      for (const dir of sectionDirs) {
+        const fullPath = path.join(this.srcSectionsDir, dir);
+        await this.processSection(fullPath);
+      }
     }
     
     // Build snippets
-    if (await fs.pathExists(this.snippetsDir)) {
-      const snippetDirs = await glob('*/', { cwd: this.snippetsDir });
+    if (await fs.pathExists(this.srcSnippetsDir)) {
+      const snippetDirs = await glob('*/', { cwd: this.srcSnippetsDir });
       console.log('\n🧩 Building snippets...');
       for (const dir of snippetDirs) {
-        const fullPath = path.join(this.snippetsDir, dir);
+        const fullPath = path.join(this.srcSnippetsDir, dir);
         await this.processSnippet(fullPath);
       }
     }
@@ -455,34 +461,49 @@ window.${className} = ${className};
   }
 
   // Avvia watch mode per sviluppo
-  async watch() {
+  async watch(withShopifyPush = false) {
     console.log('👁️  Starting watch mode...\n');
     
     await this.buildAll();
     
+    // Se richiesto, esegui il primo push
+    if (withShopifyPush) {
+      await this.shopifyPush();
+    }
+    
     // Watch sections
-    const sectionsWatcher = chokidar.watch(this.sectionsDir, {
-      ignored: /node_modules/,
-      persistent: true
-    });
-    
-    sectionsWatcher.on('change', async (filePath) => {
-      const sectionDir = path.dirname(filePath);
-      const sectionName = path.basename(sectionDir);
+    if (await fs.pathExists(this.srcSectionsDir)) {
+      const sectionsWatcher = chokidar.watch(this.srcSectionsDir, {
+        ignored: /node_modules/,
+        persistent: true
+      });
       
-      console.log(`\n📝 Section file changed: ${path.basename(filePath)}`);
-      await this.processSection(sectionDir);
-    });
-    
-    sectionsWatcher.on('add', async (filePath) => {
-      const sectionDir = path.dirname(filePath);
-      console.log(`\n➕ Section file added: ${path.basename(filePath)}`);
-      await this.processSection(sectionDir);
-    });
+      sectionsWatcher.on('change', async (filePath) => {
+        const sectionDir = path.dirname(filePath);
+        const sectionName = path.basename(sectionDir);
+        
+        console.log(`\n📝 Section file changed: ${path.basename(filePath)}`);
+        await this.processSection(sectionDir);
+        
+        if (withShopifyPush) {
+          await this.shopifyPush();
+        }
+      });
+      
+      sectionsWatcher.on('add', async (filePath) => {
+        const sectionDir = path.dirname(filePath);
+        console.log(`\n➕ Section file added: ${path.basename(filePath)}`);
+        await this.processSection(sectionDir);
+        
+        if (withShopifyPush) {
+          await this.shopifyPush();
+        }
+      });
+    }
     
     // Watch snippets if directory exists
-    if (await fs.pathExists(this.snippetsDir)) {
-      const snippetsWatcher = chokidar.watch(this.snippetsDir, {
+    if (await fs.pathExists(this.srcSnippetsDir)) {
+      const snippetsWatcher = chokidar.watch(this.srcSnippetsDir, {
         ignored: /node_modules/,
         persistent: true
       });
@@ -502,7 +523,50 @@ window.${className} = ${className};
       });
     }
     
-    console.log('🔍 Watching sections and snippets for changes... Press Ctrl+C to stop.');
+    console.log('🔍 Watching src/ directory for changes... Press Ctrl+C to stop.');
+    if (withShopifyPush) {
+      console.log('🚀 Auto-pushing to Shopify development theme enabled');
+    }
+  }
+
+  // Esegue shopify theme push -d
+  async shopifyPush() {
+    return new Promise((resolve, reject) => {
+      const { spawn } = require('child_process');
+      
+      console.log('🚀 Pushing to Shopify development theme...');
+      
+      const shopify = spawn('shopify', ['theme', 'push', '-d'], {
+        stdio: 'pipe',
+        shell: true
+      });
+      
+      let output = '';
+      let errorOutput = '';
+      
+      shopify.stdout.on('data', (data) => {
+        output += data.toString();
+      });
+      
+      shopify.stderr.on('data', (data) => {
+        errorOutput += data.toString();
+      });
+      
+      shopify.on('close', (code) => {
+        if (code === 0) {
+          console.log('✅ Successfully pushed to Shopify');
+          resolve();
+        } else {
+          console.error('❌ Shopify push failed:', errorOutput);
+          resolve(); // Non bloccare il watch mode
+        }
+      });
+      
+      shopify.on('error', (error) => {
+        console.error('❌ Failed to execute shopify command:', error.message);
+        resolve(); // Non bloccare il watch mode
+      });
+    });
   }
 
   // Pulisce i file generati
@@ -535,54 +599,64 @@ switch (command) {
     builder.buildAll();
     break;
   case 'watch':
-    builder.watch();
+    builder.watch(process.argv.includes('--push'));
+    break;
+  case 'watch:push':
+    builder.watch(true);
     break;
   case 'clean':
     builder.clean();
     break;
   default:
     console.log(`
-🛠️  Shopify Theme Builder
+🛠️  Shopify Theme Builder - Reversed Structure
 
 Usage:
-  node build.js build   - Build all sections and snippets once
-  node build.js watch   - Build and watch for changes
-  node build.js clean   - Clean generated files
+  node build.js build         - Build all sections and snippets once
+  node build.js watch         - Build and watch for changes
+  node build.js watch --push  - Watch with automatic Shopify push
+  node build.js watch:push    - Watch with automatic Shopify push
+  node build.js clean         - Clean generated files
 
-Structure:
-  sections/
-    ├── text/
-    │   ├── text.liquid
-    │   ├── text.scss
-    │   └── text.js
-    └── hero/
-        ├── hero.liquid
-        ├── hero.scss
-        └── hero.js
-  
-  snippets/
-    ├── product-card/
-    │   ├── product-card.liquid
-    │   ├── product-card.scss
-    │   └── product-card.js
-    └── button/
-        ├── button.liquid
-        ├── button.scss
-        └── button.js
-
-Output:
-  src/
+NEW Structure (src → root):
+  src/                   ← Development files (your source)
     ├── sections/
-    │   ├── text.liquid (with CSS/JS references)
-    │   └── hero.liquid (with CSS/JS references)
-    ├── snippets/
-    │   ├── product-card.liquid (with CSS/JS references)
-    │   └── button.liquid (with CSS/JS references)
-    └── assets/
-        ├── text.css, text.js
-        ├── hero.css, hero.js
-        ├── product-card.css, product-card.js
-        └── button.css, button.js
+    │   ├── text/
+    │   │   ├── text.liquid
+    │   │   ├── text.scss
+    │   │   └── text.js
+    │   └── hero/
+    │       ├── hero.liquid
+    │       ├── hero.scss
+    │       └── hero.js
+    └── snippets/
+        ├── product-card/
+        │   ├── product-card.liquid
+        │   ├── product-card.scss
+        │   └── product-card.js
+        └── button/
+            ├── button.liquid
+            ├── button.scss
+            └── button.js
+
+Output (Shopify compatible):
+  sections/              ← Shopify theme structure
+    ├── text.liquid (with CSS/JS references)
+    └── hero.liquid (with CSS/JS references)
+  snippets/
+    ├── product-card.liquid (with CSS/JS references)
+    └── button.liquid (with CSS/JS references)
+  assets/
+    ├── text.css, text.js
+    ├── hero.css, hero.js
+    ├── product-card.css, product-card.js
+    └── button.css, button.js
+
+Benefits:
+  ✅ Shopify CLI works directly (no need to copy files)
+  ✅ Theme development structure respected
+  ✅ Source code organized in src/ for development
+  ✅ Compiled files in correct Shopify locations
 
 Snippet Usage:
   {% render 'product-card', product: product, unique_id: 'card-1' %}
