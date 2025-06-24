@@ -1,0 +1,5 @@
+@media screen and (min-width: 750px) {
+  .section-main-collection-banner .grid {
+    --grid-columns: 2;
+  }
+}

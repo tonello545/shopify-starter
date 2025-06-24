@@ -1,0 +1,132 @@
+{% comment %}
+  Renders the filtering and sorting for a collection or set of search results.
+
+  Usage:
+  {% render 'filter-and-sort', results: collection %}
+
+  Accepts:
+  - results: {Array objects}
+{% endcomment %}
+
+{{ 'component-filter-and-sort.css' | asset_url | stylesheet_tag }}
+
+<form id="FacetFiltersForm" class="container filters">
+  <div class="filters-wrapper">
+    {% unless results.terms == null %}
+      <input type="hidden" name="q" value="{{ results.terms }}">
+      <input name="options[prefix]" type="hidden" value="last">
+    {% endunless %}
+
+    {% if results.current_vendor or results.current_type %}
+      {%- comment -%}
+        There are special collection pages for vendor and product types that use a "q" parameter.
+        For filtering and sorting to work properly for these, we must pass use a hidden input to pass them into the URL
+      {%- endcomment -%}
+      <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+    {% endif %}
+
+    {%- for filter in results.filters -%}
+      {% case filter.type %}
+        {% when 'boolean', 'list' %}
+          <details class="disclosure dropdown">
+            <summary class="button">
+              {{ filter.label | escape }}
+              {% unless filter.active_values == empty %}
+                ({{ filter.active_values | size -}}
+                <span class="visually-hidden">{{ 'accessibility.filter_active_values' | t }}</span>)
+              {% endunless %}
+            </summary>
+            <div>
+              <fieldset>
+                <legend class="visually-hidden">{{ filter.label | escape }}</legend>
+                <ul class="list-unstyled" role="list">
+                  {%- for value in filter.values -%}
+                    <li>
+                      <input
+                        type="checkbox"
+                        name="{{ value.param_name }}"
+                        value="{{ value.value }}"
+                        id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                        {% if value.active %}
+                          checked
+                        {% endif %}
+                        {% if value.count == 0 and value.active == false %}
+                          disabled
+                        {% endif %}
+                      >
+                      <label for="Filter-{{ filter.label | escape }}-{{ forloop.index }}">
+                        {{ value.label | escape }} ({{ value.count }})
+                      </label>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </fieldset>
+
+              <a href="{{ filter.url_to_remove }}">
+                {{ 'products.facets.reset' | t }}
+              </a>
+            </div>
+          </details>
+        {% when 'price_range' %}
+          <details class="disclosure dropdown">
+            <summary class="button">
+              {{ filter.label | escape }}
+            </summary>
+            <div>
+              <div>
+                <div>
+                  {%- assign max_price_amount = filter.range_max | money | strip_html | escape -%}
+                  <span>{{ 'products.facets.max_price' | t: price: max_price_amount }}</span>
+                </div>
+                <fieldset>
+                  <div>
+                    <label for="Filter-{{ filter.label | escape }}-GTE">{{ 'products.facets.from' | t }}</label>
+                    <input
+                      name="{{ filter.min_value.param_name }}"
+                      id="Filter-{{ filter.label | escape }}-GTE"
+                      type="text"
+                      placeholder="0"
+                      value="{{ filter.min_value.value | money_without_currency }}"
+                    >
+                  </div>
+                  <div>
+                    <label for="Filter-{{ filter.label | escape }}-LTE">{{ 'products.facets.to' | t }}</label>
+                    <input
+                      name="{{ filter.max_value.param_name }}"
+                      id="Filter-{{ filter.label | escape }}-LTE"
+                      type="text"
+                      value="{{ filter.max_value.value | money_without_currency }}"
+                    >
+                  </div>
+                </fieldset>
+                <a href="{{ filter.url_to_remove }}">
+                  {{ 'products.facets.reset' | t }}
+                </a>
+              </div>
+            </div>
+          </details>
+      {% endcase %}
+    {%- endfor -%}
+  </div>
+
+  <div>
+    <label for="SortBy">{{ 'products.facets.sort_by_label' | t }}</label>
+    <div>
+      {%- assign sort_by = results.sort_by | default: results.default_sort_by -%}
+      <select name="sort_by" id="SortBy" aria-describedby="A11y-RefreshPageMessage">
+        {%- for option in results.sort_options -%}
+          <option
+            value="{{ option.value | escape }}"
+            {% if option.value == sort_by %}
+              selected="selected"
+            {% endif %}
+          >
+            {{ option.name | escape }}
+          </option>
+        {%- endfor -%}
+      </select>
+    </div>
+  </div>
+
+  <button class="button">{{ 'products.facets.filter_and_sort_button' | t }}</button>
+</form>

@@ -1,0 +1,20 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+
+{% render 'filter-and-sort', results: collection %}
+
+{%- paginate collection.products by 8 -%}
+  <div class="container">
+    {%- if collection.products.size == 0 -%}
+      {{ 'products.facets.use_fewer_filters_html' | t: link: collection.url }}
+    {%- endif -%}
+
+    <ul class="grid list-unstyled" role="list">
+      {%- for product in collection.products -%}
+        <li>
+          {% render 'product-card', card_product: product %}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+  {% render 'pagination', paginate: paginate %}
+{%- endpaginate -%}

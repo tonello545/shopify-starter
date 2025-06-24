@@ -1,0 +1,115 @@
+.product .grid {
+  --grid-columns: 1;
+  position: relative;
+}
+
+@media screen and (min-width: 750px) {
+  .product .grid {
+    --grid-columns: 2;
+  }
+}
+
+.product-media a {
+  display: block;
+}
+
+.product-media.grid {
+  --grid-columns: 1;
+}
+
+@media screen and (max-width: 749px) {
+  .product-media {
+    display: flex;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scroll-padding-left: var(--container-padding);
+    scroll-padding-right: var(--container-padding);
+    padding-top: var(--container-padding);
+    padding-bottom: var(--container-padding);
+    margin-left: calc(var(--container-padding) * -1);
+    margin-right: calc(var(--container-padding) * -1);
+  }
+
+  .product-media li {
+    scroll-snap-align: center;
+    max-width: calc(100% - 60px);
+    min-width: calc(100% - 60px);
+  }
+
+  .product-media li:first-child {
+    scroll-snap-align: start;
+    margin-left: var(--container-padding);
+  }
+}
+
+/* Dynamic checkout button resets */
+
+.shopify-payment-button__button--unbranded {
+  border-radius: 0;
+  width: fit-content;
+}
+
+.product-form button[type="submit"]:is([disabled], [aria-disabled="true"]) + .shopify-payment-button .shopify-payment-button__button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.shopify-payment-button__button + .shopify-payment-button__button--hidden {
+  /* Physically hide visually hidden dynamic buttons */
+  display: none;
+}
+
+/* Product model UI */
+
+product-model {
+  display: block;
+  position: relative;
+}
+
+product-model button {
+  position: relative;
+  width: 100%;
+  padding-bottom: calc(var(--height) / var(--width) * 100%);
+  border: 0;
+}
+
+product-model button img {
+  object-fit: cover;
+}
+
+product-model button img,
+product-model .shopify-model-viewer-ui,
+product-model .shopify-model-viewer-ui model-viewer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+}
+
+.xr-button[data-shopify-xr-hidden] {
+  visibility: hidden;
+}
+
+.shopify-design-mode .xr-button[data-shopify-xr-hidden] {
+  display: none;
+}
+
+@media screen and (max-width: 749px) {
+  .active .xr-button:not([data-shopify-xr-hidden]) {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .xr-button[data-shopify-xr-hidden] {
+    display: none;
+  }
+}
+
+.shopify-model-viewer-ui__button[hidden] {
+  display: none;
+}

@@ -1,0 +1,57 @@
+
+header {
+  border-bottom: 1px solid lightgrey;
+}
+
+.header > .container {
+  display: flex;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+/* Logo / Heading */
+
+.logo {
+  flex-grow: 1;
+  padding: 0 15px;
+}
+
+.logo h1 {
+  margin: 0;
+  line-height: 0;
+  font-weight: normal;
+}
+
+.logo a {
+  display: inline-block;
+}
+
+.logo a > span {
+  line-height: 1;
+}
+
+/* Navigation */
+
+.menu .menu-item {
+  color: var(--color-foreground);
+  display: block;
+  padding: 15px 5px;
+  cursor: pointer;
+}
+
+.submenu .menu-item {
+  padding-left: 15px;
+}
+
+/* Utility links  */
+
+.utility-links {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.utility-links a {
+  margin-left: 5px;
+}

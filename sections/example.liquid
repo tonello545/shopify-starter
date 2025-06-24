@@ -1,0 +1,536 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-dialog.css' | asset_url | stylesheet_tag }}
+
+<div class="container">
+  <p class="message-error h4">
+    This section is for development purposes only and should be removed from the final version of the theme that is
+    intended for merchant use.
+  </p>
+
+  <h1>Accelerator Theme</h1>
+
+  <p>
+    The Accelerator theme is a lightweight, flexible foundation on top of which Shopify themes can be built. It
+    represents a HTML-first, JavaScript-only-as-needed approach to theme development with performance, flexibility, and
+    <a href="https://www.shopify.com/partners/blog/shopify-online-store">Online Store 2.0 features</a> built-in and acts
+    as a starting point to accelerate the development of Shopify themes.
+  </p>
+
+  <h2>Example components</h2>
+
+  <h3 class="visually-hidden">Table of contents</h3>
+  <ol>
+    <li>
+      <a href="#button">Button</a>
+    </li>
+    <li>
+      <a href="#card">Card</a>
+    </li>
+    <li>
+      <a href="#dialog">Dialog</a>
+    </li>
+    <li>
+      <a href="#dropdown">Dropdown</a>
+    </li>
+    <li>
+      <a href="#grid">Grid</a>
+    </li>
+    <li>
+      <a href="#input">Input</a>
+    </li>
+    <li>
+      <a href="#loading">Loading</a>
+    </li>
+    <li>
+      <a href="#media">Media</a>
+    </li>
+    <li>
+      <a href="#message">Message</a>
+    </li>
+    <li>
+      <a href="#table">Table</a>
+    </li>
+    <li>
+      <a href="#typography">Typography</a>
+    </li>
+  </ol>
+
+  <div id="button">
+    <h4>Button</h4>
+    <form>
+      <button class="button">Button</button>
+      <a href="#" class="button">Button link</a>
+      <a href="#">Link</a>
+    </form>
+  </div>
+
+  <hr>
+
+  <div id="card">
+    <h4>Card</h4>
+
+    <ul class="grid list-unstyled" role="list">
+      <li>
+        <h5>Article card</h5>
+        <div class="card">
+          <div
+            class="media"
+            style="--width: {{ article.image.width | default: 100 }}; --height: {{ article.image.height | default: 100 }};"
+          >
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+          <h2>
+            <a href="#">Article title</a>
+          </h2>
+          <p>Article excerpt</p>
+        </div>
+      </li>
+      <li>
+        <h5>Collection card</h5>
+        <div class="card">
+          <div
+            class="media"
+            style="--width: {{ collection.image.width | default: 100 }}; --height: {{ collection.image.width | default: 100 }};"
+          >
+            {{ 'collection-1' | placeholder_svg_tag }}
+          </div>
+          <h2>
+            <a href="#">Collection title</a>
+          </h2>
+        </div>
+      </li>
+      <li>
+        <h5>Product card</h5>
+        <div class="card">
+          <div
+            class="media"
+            style="--width: {{ product.featured_media.width | default: 100 }}; --height: {{ product.featured_media.height | default: 100 }};"
+          >
+            {{ 'product-1' | placeholder_svg_tag }}
+          </div>
+          <h2>
+            <a href="#">Product title</a>
+          </h2>
+          <small>Product vendor</small>
+          {%- render 'price', product: product -%}
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <hr>
+
+  <div id="dialog">
+    <h4>Dialog</h4>
+
+    <h5>Modal</h5>
+    <ul class="grid list-unstyled" role="list">
+      <li>
+        <details class="dialog modal overlay">
+          <summary aria-haspopup="dialog" aria-controls="Modal">
+            <span class="button">Open modal with header and footer</span>
+            <span class="dialog-close button" aria-label="Close modal">Close</span>
+          </summary>
+          <div id="Modal" role="dialog" aria-labelledby="ModalHeading" aria-modal="true">
+            <div class="dialog-header">
+              <h2 id="ModalHeading">Modal with header and footer</h2>
+            </div>
+            <div class="dialog-body">
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Pellentesque id nibh tortor id aliquet lectus. Habitant morbi tristique senectus et
+                netus. At erat pellentesque adipiscing commodo elit at imperdiet dui. Mauris ultrices eros in cursus.
+                Sit amet consectetur adipiscing elit pellentesque habitant morbi. Morbi quis commodo odio aenean sed.
+                Augue interdum velit euismod in pellentesque massa. Donec pretium vulputate sapien nec sagittis aliquam.
+                Morbi non arcu risus quis varius quam. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper
+                dignissim. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Leo urna molestie at elementum eu
+                facilisis sed.
+              </p>
+              <p>
+                Nunc eget lorem dolor sed viverra ipsum. Id velit ut tortor pretium viverra suspendisse. Massa ultricies
+                mi quis hendrerit dolor magna. In aliquam sem fringilla ut morbi tincidunt augue interdum velit. Sit
+                amet mauris commodo quis imperdiet massa. Diam volutpat commodo sed egestas egestas fringilla. Eget
+                aliquet nibh praesent tristique magna sit amet purus. Tempus quam pellentesque nec nam aliquam sem et.
+                Ante metus dictum at tempor. Eu tincidunt tortor aliquam nulla. Donec et odio pellentesque diam volutpat
+                commodo sed. Id interdum velit laoreet id donec ultrices tincidunt arcu. Elementum curabitur vitae nunc
+                sed velit dignissim sodales.
+              </p>
+              <p>
+                Neque ornare aenean euismod elementum nisi quis eleifend quam adipiscing. Donec massa sapien faucibus et
+                molestie ac feugiat sed lectus. Iaculis urna id volutpat lacus laoreet. Et malesuada fames ac turpis
+                egestas integer eget aliquet nibh. Tincidunt tortor aliquam nulla facilisi cras fermentum odio eu
+                feugiat. Ipsum dolor sit amet consectetur adipiscing elit pellentesque habitant. Egestas tellus rutrum
+                tellus pellentesque eu tincidunt tortor aliquam. Scelerisque fermentum dui faucibus in. Ultrices mi
+                tempus imperdiet nulla malesuada pellentesque. Pretium vulputate sapien nec sagittis aliquam. Amet
+                consectetur adipiscing elit ut aliquam purus. Quis viverra nibh cras pulvinar mattis nunc. Magnis dis
+                parturient montes nascetur ridiculus mus mauris vitae. Vitae tortor condimentum lacinia quis vel. Justo
+                donec enim diam vulputate ut pharetra sit amet. Gravida cum sociis natoque penatibus et magnis dis
+                parturient. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper dignissim cras tincidunt. Elit
+                duis tristique sollicitudin nibh sit amet commodo nulla.
+              </p>
+              <p>
+                Elementum nibh tellus molestie nunc non blandit massa enim nec. Vestibulum sed arcu non odio euismod.
+                Sit amet consectetur adipiscing elit. Feugiat nisl pretium fusce id velit ut tortor pretium viverra.
+                Nunc consequat interdum varius sit amet mattis. Sodales ut etiam sit amet nisl purus. Nibh praesent
+                tristique magna sit. Erat pellentesque adipiscing commodo elit at imperdiet. Vestibulum lectus mauris
+                ultrices eros in. Malesuada fames ac turpis egestas. Mi sit amet mauris commodo quis imperdiet massa
+                tincidunt nunc. Vel turpis nunc eget lorem dolor. Convallis tellus id interdum velit laoreet id donec
+                ultrices tincidunt.
+              </p>
+              <p>
+                Quam elementum pulvinar etiam non quam lacus suspendisse. Volutpat maecenas volutpat blandit aliquam
+                etiam erat velit. Bibendum at varius vel pharetra. In arcu cursus euismod quis. Elementum facilisis leo
+                vel fringilla. Odio eu feugiat pretium nibh. Tortor id aliquet lectus proin nibh nisl condimentum. Nunc
+                vel risus commodo viverra maecenas accumsan lacus vel facilisis. Eget lorem dolor sed viverra ipsum
+                nunc. Ut pharetra sit amet aliquam.
+              </p>
+            </div>
+            <div class="dialog-footer">
+              <p>Modal footer</p>
+            </div>
+          </div>
+        </details>
+      </li>
+      <li>
+        <details class="dialog modal overlay">
+          <summary aria-haspopup="dialog" aria-controls="Modal2">
+            <span class="button">Open modal</span>
+            <span class="dialog-close button" aria-label="Close modal">Close</span>
+          </summary>
+          <div id="Modal2" role="dialog" aria-labelledby="ModalHeading2" aria-modal="true">
+            <div class="dialog-body">
+              <h2 id="ModalHeading2">Simple modal</h2>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Pellentesque id nibh tortor id aliquet lectus. Habitant morbi tristique senectus et
+                netus. At erat pellentesque adipiscing commodo elit at imperdiet dui. Mauris ultrices eros in cursus.
+                Sit amet consectetur adipiscing elit pellentesque habitant morbi. Morbi quis commodo odio aenean sed.
+                Augue interdum velit euismod in pellentesque massa. Donec pretium vulputate sapien nec sagittis aliquam.
+                Morbi non arcu risus quis varius quam. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper
+                dignissim. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Leo urna molestie at elementum eu
+                facilisis sed.
+              </p>
+            </div>
+          </div>
+        </details>
+      </li>
+    </ul>
+
+    <h5>Drawer</h5>
+    <details class="dialog drawer overlay">
+      <summary aria-haspopup="dialog" aria-controls="Drawer">
+        <span class="button">Open drawer</span>
+        <span class="dialog-close button" aria-label="Close drawer">Close</span>
+      </summary>
+      <div id="Drawer" role="dialog" aria-labelledby="DrawerHeading" aria-modal="true">
+        <div class="dialog-header">
+          <h2 id="DrawerHeading">Test drawer</h2>
+        </div>
+        <div class="dialog-body">
+          <ul id="dropdown-3" class="list-unstyled" role="list">
+            {% for i in (1..18) %}
+              <li>
+                <a href="#">Item {{ i }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="dialog-footer">
+          <p>Drawer footer</p>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <hr>
+
+  <div id="dropdown">
+    <h4>Dropdown</h4>
+
+    <details>
+      <summary aria-label="Dropdown component" role="button" aria-expanded="true" aria-controls="dropdown-1">
+        <span>Default disclosure</span>
+      </summary>
+      <div id="dropdown-1">Testing</div>
+    </details>
+
+    <details class="disclosure dropdown overlay">
+      <summary>
+        <span>No-js Dropdown</span>
+      </summary>
+      <div>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua.
+      </div>
+    </details>
+
+    <details class="disclosure dropdown overlay">
+      <summary role="button" aria-expanded="true" aria-controls="dropdown-2">
+        <span>Dropdown</span>
+      </summary>
+      <div id="dropdown-2">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua.
+      </div>
+    </details>
+
+    <details class="disclosure dropdown overlay">
+      <summary role="button" aria-expanded="true" aria-controls="dropdown-3">
+        <span>Dropdown menu</span>
+      </summary>
+      <ul id="dropdown-3" class="list-unstyled" role="list">
+        <li><a href="#">Item 1</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 1</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 1</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 1</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 1</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 1</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 1</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 1</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 1</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+        <li><a href="#">Item 1</a></li>
+        <li><a href="#">Item 2</a></li>
+        <li><a href="#">Item 3</a></li>
+      </ul>
+    </details>
+  </div>
+
+  <hr>
+
+  <div id="grid">
+    <h4>Grid</h4>
+    <ul class="grid list-unstyled" role="list">
+      {% for i in (1..6) %}
+        <div class="card">
+          <div
+            class="media"
+            style="--width: {{ article.image.width | default: 100 }}; --height: {{ article.image.height | default: 100 }};"
+          >
+            {{ 'product-' | append: i | placeholder_svg_tag }}
+          </div>
+          <h5>Grid item</h5>
+        </div>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <hr>
+
+  <div id="input">
+    <h4>Input</h4>
+    <form>
+      <label for="text-input">Text input</label>
+      <input id="text-input" type="text">
+
+      <label for="text-input-err">Text input error</label>
+      <input id="text-input-err" type="text" aria-describedby="error-1" aria-invalid="true">
+      <small id="error-1" class="message-error">Field can't be blank.</small>
+
+      <label for="text-input-success">Text input success</label>
+      <input id="text-input-success" type="text" aria-describedby="success-1">
+      <small id="success-1" class="message-success">Your changes were saved.</small>
+
+      <label for="textarea">Textarea</label>
+      <textarea id="textarea"></textarea>
+
+      <label for="select">Select</label>
+      <select id="select">
+        <option value="option-1">Option 1</option>
+        <option value="option-2">Option 2</option>
+        <option value="option-3">Option 3</option>
+      </select>
+
+      <input id="option-1" type="radio" name="options">
+      <label for="option-1">Option 1</label>
+      <input id="option-2" type="radio" name="options">
+      <label for="option-2">Option 2</label>
+      <br>
+      <input id="check-1" type="checkbox" name="options">
+      <label for="check-1">Option 1</label>
+      <input id="check-2" type="checkbox" name="options">
+      <label for="check-2">Option 2</label>
+    </form>
+  </div>
+
+  <hr>
+
+  <div id="loading">
+    <h4>Loading</h4>
+
+    <ul class="grid list-unstyled" role="list">
+      <li>
+        <div class="media" style="--width: 3; --height: 1;">
+          <div class="loading-overlay">
+            <div>
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 66 66"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <hr>
+
+  <div id="media">
+    <h4>Media</h4>
+
+    <ul class="grid list-unstyled" role="list">
+      <li>
+        <h5>Image</h5>
+        <div class="media" style="--width: 300; --height: 200;">
+          {{ 'image' | placeholder_svg_tag }}
+        </div>
+      </li>
+      <li>
+        <h5>External video</h5>
+        <a href="https://www.youtube.com/embed/_9VUPq3SxOc">
+          <div
+            class="media play-icon"
+            style="--width: 1600; --height: 900;"
+          >
+            {{ 'lifestyle-1' | placeholder_svg_tag }}
+          </div>
+          <span class="visually-hidden">
+            {{- 'accessibility.video_exit_message' | t: title: 'example' | escape -}}
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <hr>
+
+  <div id="message">
+    <h4>Message</h4>
+    <span class="message-success">Success message</span>
+    <span class="message-error">Error message</span>
+  </div>
+
+  <hr>
+
+  <div id="table">
+    <h4>Table</h4>
+
+    <div class="horizontal-scrolling">
+      <table>
+        <caption class="visually-hidden">
+          Order summary
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Product</th>
+            <th scope="col">SKU</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td scope="row">
+              <a href="">Product title</a>
+            </td>
+            <td>SKU</td>
+            <td><span>$48.00</span></td>
+            <td>1</td>
+            <td>$48.00</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td scope="row" colspan="4">Subtotal</td>
+            <td>$48.00</td>
+          </tr>
+          <tr>
+            <td scope="row" colspan="4">Shipping</td>
+            <td>$0.00</td>
+          </tr>
+          <tr>
+            <td scope="row" colspan="4">Tax</td>
+            <td>$5.52</td>
+          </tr>
+          <tr>
+            <td scope="row" colspan="3">Total</td>
+            <td colspan="2">$48.00</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <hr>
+
+  <div id="typography">
+    <h4>Typography</h4>
+
+    <h5>Headings</h5>
+
+    <h1 class="h0">h0 - 5.2rem / 4rem</h1>
+    <h1>h1 - 4rem / 3rem</h1>
+    <h2>h2 - 2.4rem / 2rem</h2>
+    <h3>h3 - 1.8rem / 1.7rem</h3>
+    <h4>h4 - 1.7rem / 1.5rem</h4>
+    <h5>h5 - 1.3rem / 1.2rem</h5>
+    <h6>h6 - 1.2rem / 1rem</h6>
+
+    <h5>Paragraph</h5>
+    <p>
+      {{
+        'The <p> HTML element represents a paragraph. Paragraphs are usually represented in visual media as blocks of text separated from adjacent blocks by blank lines and/or first-line indentation, but HTML paragraphs can be any structural grouping of related content, such as images or form fields.'
+        | escape
+      }}
+    </p>
+  </div>
+
+  <p class="message-error h4">
+    This section is for development purposes only and should be removed from the final version of the theme that is
+    intended for merchant use.
+  </p>
+</div>
+
+{% schema %}
+{
+  "name": "Example",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

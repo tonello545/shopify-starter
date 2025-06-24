@@ -1,0 +1,38 @@
+<script src="{{ 'product-recommendations.js' | asset_url }}" defer="defer"></script>
+
+{% assign products_to_show = 4 %}
+
+<div class="container">
+  <product-recommendations data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ products_to_show }}">
+    {% if recommendations.performed and recommendations.products_count > 0 %}
+      <h2>{{ section.settings.heading | escape }}</h2>
+      <ul class="grid list-unstyled" role="list">
+        {% for recommendation in recommendations.products %}
+          <li>
+            {% render 'product-card', card_product: recommendation %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </product-recommendations>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.product-recommendations.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.product-recommendations.settings.paragraph.content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "You may also like",
+      "label": "t:sections.product-recommendations.settings.heading.label"
+    }
+  ]
+}
+{% endschema %}

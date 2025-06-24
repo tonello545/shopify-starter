@@ -1,0 +1,5 @@
+@media screen and (min-width: 750px) {
+  .section-image-with-text .grid {
+    --grid-columns: 2;
+  }
+}

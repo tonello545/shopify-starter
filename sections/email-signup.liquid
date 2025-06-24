@@ -1,0 +1,55 @@
+<div class="container">
+  <h2>{{ section.settings.heading }}</h2>
+  {%- form 'customer' -%}
+    <label for="NewsletterEmail--{{ section.id }}">{{ 'general.newsletter.email' | t }}</label>
+    <input
+      id="NewsletterEmail--{{ section.id }}"
+      type="email"
+      name="contact[email]"
+      value="{{ form.email }}"
+      aria-required="true"
+      autocorrect="off"
+      autocapitalize="off"
+      autocomplete="email"
+      required
+      {% if form.errors %}
+        autofocus
+        aria-invalid="true"
+        aria-describedby="NewsletterError--{{ section.id }}"
+      {% elsif form.posted_successfully? %}
+        aria-describedby="NewsletterSuccess--{{ section.id }}"
+      {% endif %}
+    >
+    {%- if form.errors -%}
+      <small id="NewsletterError--{{ section.id }}" class="message-error">
+        {{- form.errors.translated_fields.email | capitalize }}
+        {{ form.errors.messages.email -}}
+      </small>
+    {%- elsif form.posted_successfully? -%}
+      <small id="NewsletterSuccess--{{ section.id }}" class="message-success" tabindex="-1" autofocus>
+        {{- 'general.newsletter.success' | t -}}
+      </small>
+    {%- endif -%}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+    <button type="submit">{{ 'general.newsletter.subscribe' | t }}</button>
+  {%- endform -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.email-signup.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Subscribe to our emails",
+      "label": "t:sections.email-signup.settings.heading.label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.email-signup.presets.name"
+    }
+  ]
+}
+{% endschema %}

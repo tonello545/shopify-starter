@@ -1,0 +1,127 @@
+.dialog > summary + * {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  position: fixed;
+  z-index: 2;
+  background-color: white;
+  border: 1px solid lightgrey;
+  box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.1);
+  /* Add space for close toggle */
+  padding-top: 40px;
+}
+
+/* Toggle (open/close) */
+
+.dialog > summary {
+  display: inline-block;
+}
+
+.dialog > summary .dialog-close {
+  display: none;
+}
+
+.dialog[open] > summary > * {
+  visibility: hidden;
+}
+
+.dialog[open] > summary .dialog-close {
+  display: block;
+  visibility: visible;
+  position: fixed;
+  z-index: 3;
+  top: 10px;
+  left: 10px;
+}
+
+/* Creates clickable overlay backdrop */
+.dialog[open] > summary::before {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+/* Modal */
+
+.modal {
+  --margin: 20px;
+  --width: 750px;
+}
+
+.modal > summary + *  {
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  min-height: 350px;
+}
+
+@media only screen and (min-width: 750px) {
+  .modal > summary + * {
+    top: var(--margin);
+    bottom: initial;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - var(--margin) * 2);
+    max-width: var(--width);
+    max-height: calc(100% - var(--margin) * 2);
+  }
+
+  .modal[open] > summary .dialog-close {
+    left: 50%;
+    /* Align with top-left corner of modal */
+    transform: translate(max(calc(-1 * var(--width) / 2 + var(--margin) / 2), var(--margin) * 2 - 50vw), var(--margin));
+  }
+}
+
+/* Drawer */
+
+.drawer > summary + * {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  max-width: 350px;
+  width: 90%;
+}
+
+/* Focus */
+
+/* Let .dialog-close handle focus styles when dialog is open */
+.dialog[open] > summary:focus {
+  outline: none;
+}
+
+.dialog[open] > summary:focus-visible .dialog-close {
+  outline: 1px solid #808080;
+}
+
+/* Fallback for browsers that don't support `:focus-visible` */
+.dialog[open] > summary:focus .dialog-close {
+  outline: 1px solid #808080;
+}
+
+/* Negate fallback if browser supports `:focus-visible` */
+.dialog[open] > summary:focus:not(:focus-visible) .dialog-close {
+  outline: none;
+}
+
+/* Dialog header, body and footer */
+
+.dialog-header,
+.dialog-footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding: 10px;
+}
+
+.dialog-header {
+  border-bottom: 1px solid lightgrey;
+}
+
+.dialog-body {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.dialog-footer {
+  border-top: 1px solid lightgrey;
+}

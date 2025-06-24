@@ -1,0 +1,14 @@
+.filters {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.filters > * + * {
+  margin-top: 10px;
+}
+
+.filters-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
